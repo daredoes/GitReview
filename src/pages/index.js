@@ -32,7 +32,7 @@ function addToDefaultDict(dict, key, value) {
 function UUID() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
-console.log(process.env)
+
 const clientID = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 

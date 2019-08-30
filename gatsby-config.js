@@ -61,6 +61,12 @@ module.exports = {
       },
       
     },
+    {
+      resolve: `gatsby-plugin-env-variables`,
+      options: {
+        whitelist: ["GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET"]
+      },
+    },
     `gatsby-plugin-offline`,
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
