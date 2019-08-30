@@ -91,7 +91,20 @@ class IndexPage extends React.Component {
     } else if (state) {
       if (values.state === state) {
         this.state.storage.setItem('token', values.code)
-        document.getElementById("tokenForm").submit();
+        fetch("https://github.com/login/oauth/access_token", {
+          method: "POST",
+          body: JSON.stringify({
+            client_id: clientID,
+            client_secret: clientSecret,
+            code: values.code,
+            state: state
+          })
+        }).then((res) => {
+          console.log(res);
+          console.log(queryString.parse(res));
+        }).err((err) => {
+          console.log("Error", err);
+        })
       }
       // Received temporary in parameters, check states, store token, make request for permanent
       // Submit a post form to https://github.com/login/oauth/access_token from https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
@@ -150,23 +163,10 @@ class IndexPage extends React.Component {
     </Form>
   </div>)
 
-const getPermanentTokenForGithubElement = (<div className="d-flex justify-content-center">
-<Form method="POST" id="tokenForm" action="https://github.com/login/oauth/access_token" >
-  <Form.Group controlId="githubTokenForm">
-    <Form.Control name="client_id" readOnly hidden value={clientID} />
-    <Form.Control name="client_secret" readOnly hidden value={clientSecret} />
-    <Form.Control name="redirect_uri" readOnly hidden value="https://gitreview.netlify.com" />
-    <Form.Control name="code" readOnly hidden value={values.code} />
-    <Form.Control name="state" readOnly hidden value={state} />
-  </Form.Group>
-</Form>
-</div>)
-
     return (<Layout>
       <SEO title="Home" />
       <div className="d-flex flex-column mt-2">
         {this.state.showOAuth && loginToGithubElement}
-        {getPermanentTokenForGithubElement}
         {this.state.gr && Object.keys(this.state.gr.getUsers()).map((login) => <GitUser key={login} user={this.state.gr.users[login]}/>)}
       </div>
     </Layout>)
