@@ -125,7 +125,7 @@ class IndexPage extends React.Component {
       </Form>
     </div>)
 
-  const state = this.state.storage.getItem("state");
+  const state = typeof window !== `undefined` ? this.state.storage.getItem("state") : UUID();
 
   const loginToGithubElement = (<div className="d-flex justify-content-center">
     <Form method="GET" action="https://github.com/login/oauth/authorize" >
