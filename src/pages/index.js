@@ -93,6 +93,7 @@ class IndexPage extends React.Component {
         this.state.storage.setItem('token', values.code)
         fetch("https://github.com/login/oauth/access_token", {
           method: "POST",
+          mode: 'cors',
           body: JSON.stringify({
             client_id: clientID,
             client_secret: clientSecret,
@@ -102,7 +103,7 @@ class IndexPage extends React.Component {
         }).then((res) => {
           console.log(res);
           console.log(queryString.parse(res));
-        }).err((err) => {
+        }).catch((err) => {
           console.log("Error", err);
         })
       }
