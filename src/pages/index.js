@@ -43,7 +43,7 @@ class IndexPage extends React.Component {
     this.state = {
       showOAuth: true,
       gr: null,
-      storage: window ? window.localStorage : null
+      storage: typeof window !== `undefined` ? window.localStorage : null
     }
     this.handleCookies();
   }
