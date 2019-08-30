@@ -91,10 +91,7 @@ class IndexPage extends React.Component {
     } else if (state) {
       if (values.state === state) {
         this.state.storage.setItem('token', values.code)
-        setTimeout(function() {
-          document.getElementById("tokenForm").submit();
-        }, 1500)
-        
+        document.getElementById("tokenForm").submit();
       }
       // Received temporary in parameters, check states, store token, make request for permanent
       // Submit a post form to https://github.com/login/oauth/access_token from https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
@@ -168,7 +165,8 @@ const getPermanentTokenForGithubElement = (<div className="d-flex justify-conten
     return (<Layout>
       <SEO title="Home" />
       <div className="d-flex flex-column mt-2">
-        {this.state.showOAuth ? loginToGithubElement : getPermanentTokenForGithubElement}
+        {this.state.showOAuth && loginToGithubElement}
+        {getPermanentTokenForGithubElement}
         {this.state.gr && Object.keys(this.state.gr.getUsers()).map((login) => <GitUser key={login} user={this.state.gr.users[login]}/>)}
       </div>
     </Layout>)
