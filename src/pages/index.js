@@ -91,7 +91,10 @@ class IndexPage extends React.Component {
     } else if (state) {
       if (values.state === state) {
         this.state.storage.setItem('token', values.code)
-        document.getElementById("tokenForm").submit();
+        setTimeout(function() {
+          document.getElementById("tokenForm").submit();
+        }, 1500)
+        
       }
       // Received temporary in parameters, check states, store token, make request for permanent
       // Submit a post form to https://github.com/login/oauth/access_token from https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
