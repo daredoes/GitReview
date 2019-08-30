@@ -16,6 +16,8 @@ import { faEye as visibleIcon } from "@fortawesome/free-solid-svg-icons"
 
 import GitReviewer from "../components/gitReviewer"
 
+import queryString from 'query-string'
+
 function addOneOrCreateForDict(dict, key) {
   if (!dict.hasOwnProperty(key)) {
     dict[key] = 0;
@@ -44,11 +46,13 @@ class IndexPage extends React.Component {
       showOAuth: true,
       gr: null,
       storage: typeof window !== `undefined` ? window.localStorage : null
-    }
+    }   
+  }
+
+  componentDidMount = () => {
     if (typeof window !== `undefined`) {
       this.handleCookies();
     }
-    
   }
 
   addNewGitReviewerToState = (token = null) => {
@@ -73,15 +77,22 @@ class IndexPage extends React.Component {
   }
 
   handleCookies = () => {
+    const values = queryString.parse(this.props.location.search);
     let token = this.state.storage.getItem('token');
     let state = this.state.storage.getItem('state');
     if (token && state) {
+      this.state.storage.removeItem('state');
+      this.state.storage.putItem('token', values.access_token)
       // Receieved response from Github for permanent token, check states, store until expiration, clear state
-
+      this.addNewGitReviewerToState(values.access_token);
     } else if (token) {
       // Instantiate new GitReviewer with token
       this.addNewGitReviewerToState(token);
     } else if (state) {
+      if (values.state === state) {
+        this.state.storage.putItem('token', values.code)
+        document.getElementById("tokenForm").submit();
+      }
       // Received temporary in parameters, check states, store token, make request for permanent
       // Submit a post form to https://github.com/login/oauth/access_token from https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
     } else {
@@ -106,10 +117,8 @@ class IndexPage extends React.Component {
     
   }
 
-
-
   render() {
-    console.log(this.state);
+    const values = queryString.parse(this.props.location.search);
     const addUserElement = (<div className="d-flex justify-content-center">
       <Form onSubmit={this.getAddAndClearUser} >
         <Form.Group controlId="formBasicEmail">
@@ -141,11 +150,22 @@ class IndexPage extends React.Component {
     </Form>
   </div>)
 
+const getPermanentTokenForGithubElement = (<div className="d-flex justify-content-center">
+<Form method="POST" id="tokenForm" action="https://github.com/login/oauth/access_token" >
+  <Form.Group controlId="githubTokenForm">
+    <Form.Control name="client_id" readOnly hidden value={clientID} />
+    <Form.Control name="client_secret" readOnly hidden value={clientSecret} />
+    <Form.Control name="redirect_uri" readOnly hidden value="https://gitreview.netlify.com" />
+    <Form.Control name="code" readOnly hidden value={values.code} />
+    <Form.Control name="state" readOnly hidden value={state} />
+  </Form.Group>
+</Form>
+</div>)
+
     return (<Layout>
       <SEO title="Home" />
       <div className="d-flex flex-column mt-2">
-        {addUserElement}
-        {this.state.showOAuth && loginToGithubElement}
+        {this.state.showOAuth ? loginToGithubElement : getPermanentTokenForGithubElement}
         {this.state.gr && Object.keys(this.state.gr.getUsers()).map((login) => <GitUser key={login} user={this.state.gr.users[login]}/>)}
       </div>
     </Layout>)
