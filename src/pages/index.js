@@ -128,7 +128,7 @@ class IndexPage extends React.Component {
     <Form method="GET" action="https://github.com/login/oauth/authorize" >
       <Form.Group controlId="githubLoginForm">
         <Form.Control name="client_id" readOnly hidden value={clientID} />
-        <Form.Control name="redirect_uri" readOnly hidden value="localhost:8000" />
+        <Form.Control name="redirect_uri" readOnly hidden value="https://gitreview.netlify.com" />
         <Form.Control name="scope" readOnly hidden value="repo" />
         <Form.Control name="state" readOnly hidden value={state} />
       </Form.Group>
