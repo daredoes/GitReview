@@ -82,7 +82,7 @@ class IndexPage extends React.Component {
     let state = this.state.storage.getItem('state');
     if (token && state) {
       this.state.storage.removeItem('state');
-      this.state.storage.putItem('token', values.access_token)
+      this.state.storage.setItem('token', values.access_token)
       // Receieved response from Github for permanent token, check states, store until expiration, clear state
       this.addNewGitReviewerToState(values.access_token);
     } else if (token) {
@@ -90,7 +90,7 @@ class IndexPage extends React.Component {
       this.addNewGitReviewerToState(token);
     } else if (state) {
       if (values.state === state) {
-        this.state.storage.putItem('token', values.code)
+        this.state.storage.setItem('token', values.code)
         document.getElementById("tokenForm").submit();
       }
       // Received temporary in parameters, check states, store token, make request for permanent
