@@ -45,7 +45,10 @@ class IndexPage extends React.Component {
       gr: null,
       storage: typeof window !== `undefined` ? window.localStorage : null
     }
-    this.handleCookies();
+    if (typeof window !== `undefined`) {
+      this.handleCookies();
+    }
+    
   }
 
   addNewGitReviewerToState = (token = null) => {
